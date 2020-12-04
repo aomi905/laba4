@@ -1,6 +1,8 @@
 package bsu.rfact.java.laba4;
 
-public class Main {
+import javax.swing.*;
+
+public class MainFrame extends JFrame {
 
     public static void main(String[] args) {
 
