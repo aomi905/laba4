@@ -2,6 +2,7 @@ package bsu.rfact.java.laba4;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 public class GraphicsDisplay extends JPanel {
 
@@ -44,6 +45,19 @@ public class GraphicsDisplay extends JPanel {
     public void setShowMarkers(boolean showMarkers){
         this.showMarkers = showMarkers;
         repaint();
+    }
+
+    protected Point2D.Double xyToPoint(double x, double y){
+        double deltaX = x - minX;
+        double deltaY = maxY - y;
+        return new Point2D.Double(deltaX * scale, deltaY * scale);
+    }
+
+    protected Point2D.Double shiftPoint(Point2D.Double src,
+                                        double deltaX, double deltaY){
+        Point2D.Double dest = new Point2D.Double();
+        dest.setLocation(src.getX() + deltaX, src.getY() + deltaY);
+        return dest;
     }
 
 }
