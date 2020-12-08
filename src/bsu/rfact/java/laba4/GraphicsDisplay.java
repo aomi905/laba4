@@ -14,24 +14,21 @@ public class GraphicsDisplay extends JPanel {
             maxY,
             scale;
     private boolean showAxis = true,
-            showMarkers = true;
-    private Font axisFont;
     private BasicStroke axisStroke,
             graphicsStroke,
             markerStroke;
-
+    private Font axisFont;
     public GraphicsDisplay(){
         setBackground(Color.PINK);
 
-        axisFont = new Font("Serif", Font.BOLD, 36);
-        axisStroke = new BasicStroke(4.0f, BasicStroke.CAP_BUTT,
-                BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
+
         graphicsStroke = new BasicStroke(4.0f, BasicStroke.CAP_ROUND,
                 BasicStroke.JOIN_ROUND, 10.0f, new float[]{20, 5, 5, 5, 10, 5, 5, 5}, 0.0f);
-
+        axisStroke = new BasicStroke(4.0f, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
         markerStroke = new BasicStroke(3.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
-
+        axisFont = new Font("Serif", Font.BOLD, 36);
     }
 
     public void showGraphics(Double[][] graphicsData){
@@ -46,6 +43,10 @@ public class GraphicsDisplay extends JPanel {
 
     public void setShowMarkers(boolean showMarkers){
         this.showMarkers = showMarkers;
+        repaint();
+    }
+    public void setShowRotate(boolean antiClockRotate) {
+        this.showRotate = antiClockRotate;
         repaint();
     }
 
@@ -80,7 +81,7 @@ public class GraphicsDisplay extends JPanel {
     protected void paintAxis(Graphics2D canvas){
         canvas.setStroke(axisStroke);
         canvas.setColor(Color.BLACK);
-        canvas.setPaint(Color.BLACK);
+
         canvas.setFont(axisFont);
 
         FontRenderContext context = canvas.getFontRenderContext();
@@ -155,6 +156,19 @@ public class GraphicsDisplay extends JPanel {
         }
     }
 
+    protected void rotate(Graphics2D canvas){
+        AffineTransform transform = AffineTransform.getRotateInstance(
+                -Math.PI / 2,
+                getSize().getWidth() / 2,
+                getSize().getHeight() / 2);
+        transform.concatenate(new AffineTransform(
+                getSize().getHeight() / getSize().getWidth(),0.0, 0.0,
+                getSize().getWidth() / getSize().getHeight(),
+                (getSize().getWidth() - getSize().getHeight()) / 2,
+                (getSize().getHeight() - getSize().getWidth()) / 2));
+        canvas.setTransform(transform);
+    }
+
     public void paintComponent(Graphics g){
         super.paintComponent(g);
 
@@ -194,11 +208,13 @@ public class GraphicsDisplay extends JPanel {
         Paint oldPaint = canvas.getPaint();
         Font oldFont = canvas.getFont();
 
+        if(showRotate)
+            rotate(canvas);
+        paintGraphics(canvas);
         if (showAxis)
             paintAxis(canvas);
         if (showMarkers)
             paintMarkers(canvas);
-        paintGraphics(canvas);
 
         canvas.setStroke(oldStroke);
         canvas.setColor(oldColor);

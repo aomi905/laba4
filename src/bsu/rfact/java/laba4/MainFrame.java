@@ -9,13 +9,14 @@ import javax.swing.event.MenuListener;
 
 public class MainFrame extends JFrame {
 
-    private static final int WIDTH = 1000,
-            HEIGHT = 500;
+    private static final int WIDTH = 1200,
+            HEIGHT = 1000;
+    private JFileChooser fileChooser = null;
     private boolean fileLoaded = false;
     private GraphicsDisplay display = new GraphicsDisplay();
     private JCheckBoxMenuItem showAxisMenuItem,
-            showMarkersMenuItem;
-    private JFileChooser fileChooser = null;
+            showMarkersMenuItem,
+            showRotateMenuItem;
     public MainFrame(){
         super("Plotting function graphs based on prepared files");
 
@@ -23,7 +24,7 @@ public class MainFrame extends JFrame {
         Toolkit kit = Toolkit.getDefaultToolkit();
         setLocation((kit.getScreenSize().width - WIDTH) / 2,
                 (kit.getScreenSize().height - HEIGHT) / 2);
-        setExtendedState(MAXIMIZED_BOTH);
+
 
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
@@ -65,6 +66,16 @@ public class MainFrame extends JFrame {
         showMarkersMenuItem = new JCheckBoxMenuItem(showMarkersAction);
         graphicsMenu.add(showMarkersMenuItem);
         showMarkersMenuItem.setSelected(true);
+        Action showRotateAction = new AbstractAction("Rotate 90 degree to the left") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                display.setShowRotate(showRotateMenuItem.isSelected());
+            }
+        };
+        showRotateMenuItem = new JCheckBoxMenuItem(showRotateAction);
+        graphicsMenu.add(showRotateMenuItem);
+        showRotateMenuItem.setSelected(false);
+
         graphicsMenu.addMenuListener(new GraphicsMenuListener());
 
         getContentPane().add(display, BorderLayout.CENTER);
@@ -118,6 +129,7 @@ public class MainFrame extends JFrame {
         public void menuSelected(MenuEvent e) {
             showAxisMenuItem.setEnabled(fileLoaded);
             showMarkersMenuItem.setEnabled(fileLoaded);
+            showRotateMenuItem.setEnabled(fileLoaded);
         }
 
         @Override
