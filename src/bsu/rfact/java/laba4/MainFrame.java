@@ -22,7 +22,7 @@ public class MainFrame extends JFrame {
         setSize(WIDTH, HEIGHT);
         Toolkit kit = Toolkit.getDefaultToolkit();
         setLocation((kit.getScreenSize().width - WIDTH) / 2,
-                (kit.getScreenSize().height - HEIGHT) / 2;
+                (kit.getScreenSize().height - HEIGHT) / 2);
         setExtendedState(MAXIMIZED_BOTH);
 
         JMenuBar menuBar = new JMenuBar();
@@ -106,6 +106,10 @@ public class MainFrame extends JFrame {
     }
 
     public static void main(String[] args) {
+
+        MainFrame frame = new MainFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
 
     }
 
