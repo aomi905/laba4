@@ -126,10 +126,17 @@ public class GraphicsDisplay extends JPanel {
 
     protected void paintMarkers(Graphics2D canvas){
         canvas.setStroke(markerStroke);
-        canvas.setColor(Color.RED);
+
 
 
         for (Double[] point : graphicsData){
+
+            Integer countableX = point[0].intValue();
+            Integer countableY = point[1].intValue();
+            if (countableX % 2 == 0 && countableY % 2 == 0)
+                canvas.setColor(Color.BLUE);
+            else
+                canvas.setColor(Color.RED);
 
             Point2D.Double center = xyToPoint(point[0], point[1]);
             canvas.draw(new Line2D.Double(shiftPoint(center, 10, 0),
