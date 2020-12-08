@@ -3,7 +3,7 @@ package bsu.rfact.java.laba4;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
+import java.io.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -71,6 +71,38 @@ public class MainFrame extends JFrame {
     }
 
     private void openGraphics(File selectedFile) {
+
+        try {
+            DataInputStream in = new DataInputStream(
+                    new FileInputStream(selectedFile));
+
+            Double[][] graphicsData = new Double[in.available() / (Double.SIZE / 8) / 2][];
+
+            int i = 0;
+            while (in.available() > 0){
+                Double x = in.readDouble(),
+                        y = in.readDouble();
+                graphicsData[i++] = new Double[]{x, y};
+            }
+
+            if (graphicsData != null && graphicsData.length > 0){
+                fileLoaded = true;
+                display.showGraphics(graphicsData);
+            }
+
+            in.close();
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(MainFrame.this,
+                    "The specified file wasn't found", "Data loading error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(MainFrame.this,
+                    "Error in reading point coordinates from file", "Data loading error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
     }
 
     public static void main(String[] args) {
