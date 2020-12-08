@@ -24,11 +24,12 @@ public class GraphicsDisplay extends JPanel {
         setBackground(Color.PINK);
 
         axisFont = new Font("Serif", Font.BOLD, 36);
-        axisStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
+        axisStroke = new BasicStroke(4.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
-        graphicsStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
-                BasicStroke.CAP_ROUND, 10.0f, null, 0.0f);
-        markerStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+        graphicsStroke = new BasicStroke(4.0f, BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_ROUND, 10.0f, new float[]{20, 5, 5, 5, 10, 5, 5, 5}, 0.0f);
+
+        markerStroke = new BasicStroke(3.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
 
     }
@@ -126,15 +127,24 @@ public class GraphicsDisplay extends JPanel {
     protected void paintMarkers(Graphics2D canvas){
         canvas.setStroke(markerStroke);
         canvas.setColor(Color.RED);
-        canvas.setPaint(Color.RED);
+
 
         for (Double[] point : graphicsData){
-            Ellipse2D.Double marker = new Ellipse2D.Double();
+
             Point2D.Double center = xyToPoint(point[0], point[1]);
-            Point2D.Double corner = shiftPoint(center, 5, 5);
-            marker.setFrameFromCenter(center, corner);
-            canvas.draw(marker);
-            canvas.fill(marker);
+            canvas.draw(new Line2D.Double(shiftPoint(center, 10, 0),
+                    shiftPoint(center, -10, 0)));
+            canvas.draw(new Line2D.Double(shiftPoint(center, 0, 10),
+                    shiftPoint(center, 0, -10)));
+
+            canvas.draw(new Line2D.Double(shiftPoint(center, 10, 5),
+                    shiftPoint(center, 10, -5)));
+            canvas.draw(new Line2D.Double(shiftPoint(center, -10, 5),
+                    shiftPoint(center, -10, -5)));
+            canvas.draw(new Line2D.Double(shiftPoint(center, 5, 10),
+                    shiftPoint(center, -5, 10)));
+            canvas.draw(new Line2D.Double(shiftPoint(center, 5, -10),
+                    shiftPoint(center, -5, -10)));
         }
     }
 
@@ -181,6 +191,7 @@ public class GraphicsDisplay extends JPanel {
             paintAxis(canvas);
         if (showMarkers)
             paintMarkers(canvas);
+        paintGraphics(canvas);
 
         canvas.setStroke(oldStroke);
         canvas.setColor(oldColor);
